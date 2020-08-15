@@ -1,21 +1,19 @@
 
-class GamesController < ApplicationController
-
 require "open-uri"
+
+class GamesController < ApplicationController
+VOWELS = %w(A E I O U Y)
+
   def new
-    @letters = []
-     i = 0
-     while i < 11
-        randomer = ('a'..'z').to_a[rand(26)]
-        @letters << randomer
-        i = i+1
-     end
+    @letters = Array.new(5) { VOWELS.sample }
+    @letters += Array.new(5) { (('A'..'Z').to_a - VOWELS).sample }
+    @letters.shuffle!
   end
 
   def score
-    @letters = params[:letters]
-    @word = params[:word]
-    @english_word = english_word?(word)
+    @letters = params[:letters].split
+    @word = (params[:word] || "").upcase
+    @english_word = english_word?(@word)
     @included = included?(@word, @letters)
   end
 
